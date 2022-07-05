@@ -34,6 +34,7 @@ def file_is_empty(file_path) -> bool:
     except (FileNotFoundError, PermissionError, OSError, RuntimeError):
         return False
 
+
 def file_name_sanitize(file_path) -> str:
     '''
     Returns file path without directory traversal
