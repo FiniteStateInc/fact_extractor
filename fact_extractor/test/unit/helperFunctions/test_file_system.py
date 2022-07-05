@@ -38,6 +38,7 @@ class TestFileSystemHelpers(unittest.TestCase):
         self.assertTrue(file_is_empty('{}/zero_byte'.format(get_test_data_dir())), 'file is empty but stated differently')
         self.assertFalse(file_is_empty('{}/get_files_test/testfile1'.format(get_test_data_dir())), 'file not empty but stated differently')
         self.assertFalse(file_is_empty(os.path.join(get_test_data_dir(), 'broken_link')), 'Broken link is not empty')
+
     def test_sanitize_file_name(self):
         self.assertEqual(file_name_sanitize('../../../../a/b/c/d'), 'a/b/c/d', 'file was not sanitized')
         self.assertEqual(file_name_sanitize('dir/../../../../a/b/c/d'), 'dir/a/b/c/d', 'file was not sanitized')

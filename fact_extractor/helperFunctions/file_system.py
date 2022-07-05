@@ -39,5 +39,4 @@ def file_name_sanitize(file_path) -> str:
     '''
     Returns file path without directory traversal
     '''
-
     return file_path.replace('../', '')
