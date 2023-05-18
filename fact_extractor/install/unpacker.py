@@ -1,6 +1,7 @@
 import hashlib
 import logging
 import os
+import platform
 from getpass import getuser
 from pathlib import Path
 from shlex import split
@@ -227,8 +228,12 @@ def main(distribution):
     install_dependencies(DEPENDENCIES['common'])
     install_dependencies(DEPENDENCIES[distribution])
 
-    # installing freetz
-    _install_freetz()
+    # installing freetz, but not on ARM machines
+    arch = platform.machine()
+    if arch.startswith("arm") or arch.startswith("aarch"):
+        logging.warning("The CPU architecture is ARM, skipping installation of FreeTZ-NG")
+    else:
+        _install_freetz()
 
     # install plug-in dependencies
     _install_plugins()
@@ -243,28 +248,28 @@ def main(distribution):
 def _edit_sudoers():
     logging.info('add rules to sudo...')
     username = getuser()
-    sudoers_content = '\n'.join(
-        (
-            f'{username}\tALL=NOPASSWD: {command}'
-            for command in (
-                '/sbin/kpartx',
-                '/sbin/losetup',
-                '/bin/mount',
-                '/bin/umount',
-                '/bin/mknod',
-                '/usr/local/bin/sasquatch',
-                '/bin/rm',
-                '/bin/cp',
-                '/bin/dd',
-                '/bin/chown',
-            )
-        )
-    )
+    sudoers_content = '\n'.join((f'{username}\tALL=NOPASSWD: {command}'
+                                 for command in (
+                                     '/sbin/kpartx',
+                                     '/sbin/losetup',
+                                     '/bin/mount',
+                                     '/bin/umount',
+                                     '/bin/mknod',
+                                     '/usr/local/bin/sasquatch',
+                                     '/bin/rm',
+                                     '/bin/cp',
+                                     '/bin/dd',
+                                     '/bin/chown',
+                                 )))
     Path('/tmp/fact_overrides').write_text(f'{sudoers_content}\n')  # pylint: disable=unspecified-encoding
-    _, chown_code = execute_shell_command_get_return_code('sudo chown root:root /tmp/fact_overrides')
-    _, mv_code = execute_shell_command_get_return_code('sudo mv /tmp/fact_overrides /etc/sudoers.d/fact_overrides')
+    _, chown_code = execute_shell_command_get_return_code(
+        'sudo chown root:root /tmp/fact_overrides')
+    _, mv_code = execute_shell_command_get_return_code(
+        'sudo mv /tmp/fact_overrides /etc/sudoers.d/fact_overrides')
     if not chown_code == mv_code == 0:
-        raise InstallationError('Editing sudoers file did not succeed\n{chown_output}\n{mv_output}')
+        raise InstallationError(
+            'Editing sudoers file did not succeed\n{chown_output}\n{mv_output}'
+        )
 
 
 def _install_patool_deps():
@@ -274,12 +279,19 @@ def _install_patool_deps():
             # install zoo unpacker
             file_name = 'zoo_2.10-28_amd64.deb'
             try:
-                run(split(f'wget http://launchpadlibrarian.net/230277773/{file_name}'), capture_output=True, check=True)
+                run(split(
+                    f'wget http://launchpadlibrarian.net/230277773/{file_name}'
+                ),
+                    capture_output=True,
+                    check=True)
                 expected_sha = '953f4f94095ef3813dfd30c8977475c834363aaabce15ab85ac5195e52fd816a'
                 assert _sha256_hash_file(Path(file_name)) == expected_sha
-                run(split(f'sudo dpkg -i {file_name}'), capture_output=True, check=True)
+                run(split(f'sudo dpkg -i {file_name}'),
+                    capture_output=True,
+                    check=True)
             except (AssertionError, CalledProcessError) as error:
-                raise InstallationError('Error during zoo unpacker installation') from error
+                raise InstallationError(
+                    'Error during zoo unpacker installation') from error
 
 
 def _sha256_hash_file(file_path: Path) -> str:
@@ -314,12 +326,14 @@ def _install_freetz():
 
 def _install_plugins():
     logging.info('Installing plugins')
-    find_output, return_code = execute_shell_command_get_return_code('find ../plugins -iname "install.sh"')
+    find_output, return_code = execute_shell_command_get_return_code(
+        'find ../plugins -iname "install.sh"')
     if return_code != 0:
         raise InstallationError('Error retrieving plugin installation scripts')
     for install_script in find_output.splitlines(keepends=False):
         logging.info(f'Running {install_script}')
-        shell_output, return_code = execute_shell_command_get_return_code(install_script)
+        shell_output, return_code = execute_shell_command_get_return_code(
+            install_script)
         if return_code != 0:
             raise InstallationError(
                 f'Error in installation of {Path(install_script).parent.name} plugin\n{shell_output}'
