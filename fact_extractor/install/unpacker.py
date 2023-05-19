@@ -231,13 +231,15 @@ def main(distribution):
     # installing freetz, but not on ARM machines
     arch = platform.machine()
     if arch.startswith("arm") or arch.startswith("aarch"):
-        logging.warning("The CPU architecture is ARM, skipping installation of FreeTZ-NG")
+        logging.warning(
+            "The CPU architecture is ARM, skipping installation of FreeTZ-NG and ZOO tools."
+        )
     else:
         _install_freetz()
+        _install_patool_deps()
 
     # install plug-in dependencies
     _install_plugins()
-    _install_patool_deps()
 
     # configure environment
     _edit_sudoers()
