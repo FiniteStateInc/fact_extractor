@@ -6,6 +6,7 @@ from getpass import getuser
 from pathlib import Path
 from shlex import split
 from subprocess import CalledProcessError, run
+import sys
 from tempfile import TemporaryDirectory
 
 from common_helper_process import execute_shell_command_get_return_code
@@ -234,6 +235,14 @@ def main(distribution):
         logging.warning(
             "The CPU architecture is ARM, skipping installation of FreeTZ-NG and ZOO tools."
         )
+        # For Linux 3.10 on ARM, there is no Lief 0.12.3 wheel available, so to prevent the
+        # 20+ minute compilation from source every time, we install the precompiled
+        # version from the FS repo.
+        if "Linux" == platform.system():
+            version = sys.version_info
+            if version.major == 3 and version.minor == 10:
+                pip_install_packages(["git+https://github.com/FiniteStateInc/fact_extractor/releases/download/lief-0.12.3-cp310-linux-aarch64/lief-0.12.3-cp310-cp310-linux_aarch64.whl"])
+
     else:
         _install_freetz()
         _install_patool_deps()
