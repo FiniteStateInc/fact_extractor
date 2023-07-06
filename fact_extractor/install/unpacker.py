@@ -241,7 +241,7 @@ def main(distribution):
         if "Linux" == platform.system():
             version = sys.version_info
             if version.major == 3 and version.minor == 10:
-                pip_install_packages(["git+https://github.com/FiniteStateInc/fact_extractor/releases/download/lief-0.12.3-cp310-linux-aarch64/lief-0.12.3-cp310-cp310-linux_aarch64.whl"])
+                pip_install_packages(["https://github.com/FiniteStateInc/fact_extractor/releases/download/lief-0.12.3-cp310-linux-aarch64/lief-0.12.3-cp310-cp310-linux_aarch64.whl"])
 
     else:
         _install_freetz()
