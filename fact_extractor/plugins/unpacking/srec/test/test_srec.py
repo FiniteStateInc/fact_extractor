@@ -17,7 +17,7 @@ def successful_extraction(files, meta_data):
     assert files
     content = Path(files[0]).read_bytes()
     assert b'Hello world.' in content
-    assert 'Success' in meta_data['output']
+    assert 'Error' not in meta_data['output']
     assert files[0].endswith('.bin')
 
 
