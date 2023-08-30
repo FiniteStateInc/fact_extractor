@@ -103,9 +103,13 @@ def main():
     logging.info(f'{PROGRAM_NAME} {PROGRAM_VERSION}')
     installation_directory = str(Path(__file__).parent / 'install')
 
-    with OperateInDirectory(installation_directory):
-        common(distribution)
-        unpacker(distribution)
+    try:
+        with OperateInDirectory(installation_directory):
+            common(distribution)
+            unpacker(distribution)
+    except Exception as e:
+        logging.exception(f'Installation failed: {e}')
+        sys.exit(1)
 
     logging.info('installation complete')
 
