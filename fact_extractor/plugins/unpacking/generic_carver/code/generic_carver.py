@@ -10,6 +10,7 @@ from pathlib import Path
 
 from common_helper_process import execute_shell_command
 from fact_helper_file import get_file_type_from_path
+from helperFunctions.shell_utils import shell_escape_string
 
 NAME = 'generic_carver'
 MIME_PATTERNS = ['generic/carver']
@@ -30,7 +31,7 @@ def unpack_function(file_path, tmp_dir):
     '''
 
     logging.debug(f'File Type unknown: execute binwalk on {file_path}')
-    output = execute_shell_command(f'binwalk --extract --carve --signature --directory  {tmp_dir} {file_path}')
+    output = execute_shell_command(f'binwalk --extract --carve --signature --directory  {shell_escape_string(tmp_dir)} {shell_escape_string(file_path)}')
 
     drop_underscore_directory(tmp_dir)
     return {'output': output, 'filter_log': ArchivesFilter(tmp_dir).remove_false_positive_archives()}
@@ -79,7 +80,7 @@ class ArchivesFilter:
         return False
 
     def _remove_invalid_archives(self, file_path: Path, command, search_key=None):
-        output = execute_shell_command(command.format(file_path))
+        output = execute_shell_command(command.format(shell_escape_string(file_path)))
 
         if search_key and search_key in output.replace('\n ', ''):
             self._remove_file(file_path)
@@ -116,7 +117,7 @@ def _output_is_empty(output):
 
 def _find_trailing_data_index_zip(file_path: Path) -> int | None:
     '''Archives carved by binwalk often have trailing data at the end. 7z can determine the actual file size.'''
-    output = execute_shell_command(f'7z l {file_path}')
+    output = execute_shell_command(f'7z l {shell_escape_string(file_path)}')
     if 'There are data after the end of archive' in output:
         match = REAL_SIZE_REGEX.search(output)
         if match:
@@ -125,7 +126,7 @@ def _find_trailing_data_index_zip(file_path: Path) -> int | None:
 
 
 def _find_trailing_data_index_bz2(file_path: Path) -> int | None:
-    output = execute_shell_command(f'bzip2 -t {file_path}')
+    output = execute_shell_command(f'bzip2 -t {shell_escape_string(file_path)}')
     if 'trailing garbage' in output:
         file_content = file_path.read_bytes()
         matches = sorted(index for magic in BZ2_EOF_MAGIC if (index := file_content.find(magic)) != -1)

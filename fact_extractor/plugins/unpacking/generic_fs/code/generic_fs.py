@@ -8,6 +8,7 @@ from tempfile import TemporaryDirectory
 from time import sleep
 
 from fact_helper_file import get_file_type_from_path
+from helperFunctions.shell_utils import shell_escape_string
 
 NAME = 'genericFS'
 MIME_PATTERNS = [
@@ -40,7 +41,7 @@ def unpack_function(file_path, tmp_dir):
 def _mount_single_filesystem(file_path, mime_type, tmp_dir):
     type_parameter = f'-t {TYPES[mime_type]}' if mime_type in TYPES else ''
     with TemporaryDirectory() as mount_dir:
-        output = _get_output(f'sudo mount {type_parameter} -v -o ro,loop {file_path} {mount_dir}')
+        output = _get_output(f'sudo mount {type_parameter} -v -o ro,loop {shell_escape_string(file_path)} {mount_dir}')
         output += _get_output(f'sudo cp -av {mount_dir}/* {tmp_dir}/')
         output += _get_output(f'sudo umount -v {mount_dir}')
 
@@ -59,7 +60,7 @@ def _run(command: str):
 
 
 def _mount_from_boot_record(file_path, tmp_dir):
-    output = _get_output(f'sudo kpartx -a -v {file_path}')
+    output = _get_output(f'sudo kpartx -a -v {shell_escape_string(file_path)}')
     sleep(1)  # Necessary since initialization of special devices seem to take some time
     # kpartx may return an error on one partition but others are still loaded correctly.
     loop_devices = _extract_loop_devices(output)

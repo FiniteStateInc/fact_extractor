@@ -6,6 +6,7 @@ import os
 
 from common_helper_passwords import get_merged_password_set
 from common_helper_process import execute_shell_command
+from helperFunctions.shell_utils import shell_escape_string
 
 from helperFunctions.file_system import get_src_dir
 
@@ -44,7 +45,7 @@ def unpack_function(file_path, tmp_dir):
     '''
     meta = {}
     for password in PW_LIST:
-        execution_string = f'fakeroot {UNPACKER_EXECUTABLE} x -y -p{password} -o{tmp_dir} {file_path}'
+        execution_string = f'fakeroot {UNPACKER_EXECUTABLE} x -y -p{password} -o{shell_escape_string(tmp_dir)} {shell_escape_string(file_path)}'
         output = execute_shell_command(execution_string)
 
         meta['output'] = output

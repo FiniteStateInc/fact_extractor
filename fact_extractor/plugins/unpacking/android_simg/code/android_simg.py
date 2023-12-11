@@ -5,6 +5,7 @@ import logging
 from pathlib import Path
 
 from common_helper_process import execute_shell_command
+from helperFunctions.shell_utils import shell_escape_string
 
 NAME = 'Android-sparse-image'
 MIME_PATTERNS = ['filesystem/android-simg']
@@ -14,7 +15,7 @@ VERSION = '0.1'
 def unpack_function(file_path, tmp_dir):
     extract_dir = Path(tmp_dir)
     file_to_unpack = Path(file_path)
-    output = execute_shell_command(f'simg2img {file_path} {extract_dir / file_to_unpack.name}.raw') + '\n'
+    output = execute_shell_command(f'simg2img {shell_escape_string(file_path)} {shell_escape_string(extract_dir / file_to_unpack.name)}.raw') + '\n'
     meta_data = {'output': output}
     logging.debug(output)
     return meta_data

@@ -6,6 +6,7 @@ from common_helper_process import execute_shell_command
 from pathlib import Path
 
 from helperFunctions.file_system import get_fact_bin_dir
+from helperFunctions.shell_utils import shell_escape_string
 
 SASQUATCH = Path('/usr/local/bin/sasquatch')
 UNSQUASHFS4_AVM_BE = Path(get_fact_bin_dir()) / 'unsquashfs4-avm-be'
@@ -30,7 +31,7 @@ def unpack_function(file_path, tmp_dir):
     '''
     unpack_result = {}
     for unpacker, parameter in SQUASH_UNPACKER:
-        output = execute_shell_command(f'fakeroot {unpacker} {parameter} -d {tmp_dir}/fact_extracted {file_path}')
+        output = execute_shell_command(f'fakeroot {unpacker} {parameter} -d {shell_escape_string(tmp_dir)}/fact_extracted {shell_escape_string(file_path)}')
         if _unpack_success(tmp_dir):
             unpack_result['unpacking_tool'] = unpacker.name
             unpack_result['output'] = output
