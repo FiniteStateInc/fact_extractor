@@ -84,7 +84,7 @@ def unpack_function(file_path: str, tmp_dir: TemporaryDirectory) -> Dict[str, st
     Extract Bosch .fw files
     Source: https://github.com/anvilventures/BoschFirmwareTool
     """
-    command = f'{TOOL_PATH} {shell_escape_string(file_path)} -o {shell_escape_string(tmp_dir)}'
+    command = f'{TOOL_PATH} {shell_escape_string(str(file_path))} -o {shell_escape_string(str(tmp_dir))}'
     output = execute_shell_command(command, timeout=30)
     try:
         header_info = get_header_info(file_path)

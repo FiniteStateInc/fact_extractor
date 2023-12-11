@@ -19,7 +19,7 @@ def unpack_function(file_path, tmp_dir):
     '''
 
     extract_dir = Path(tmp_dir) / 'jffs-root'
-    output = execute_shell_command(f'fakeroot jefferson -v -d {extract_dir} {shell_escape_string(file_path)}') + '\n'
+    output = execute_shell_command(f'fakeroot jefferson -v -d {extract_dir} {shell_escape_string(str(file_path))}') + '\n'
     meta_data = {'output': output}
     logging.debug(output)
     return meta_data

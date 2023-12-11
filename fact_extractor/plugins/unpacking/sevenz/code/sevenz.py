@@ -45,7 +45,7 @@ def unpack_function(file_path, tmp_dir):
     '''
     meta = {}
     for password in PW_LIST:
-        execution_string = f'fakeroot {UNPACKER_EXECUTABLE} x -y -p{password} -o{shell_escape_string(tmp_dir)} {shell_escape_string(file_path)}'
+        execution_string = f'fakeroot {UNPACKER_EXECUTABLE} x -y -p{password} -o{shell_escape_string(str(tmp_dir))} {shell_escape_string(str(file_path))}'
         output = execute_shell_command(execution_string)
 
         meta['output'] = output

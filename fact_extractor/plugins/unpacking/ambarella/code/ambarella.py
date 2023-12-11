@@ -21,7 +21,7 @@ def unpack_function(file_path, tmp_dir):
     fallback_directory = getcwd()
     chdir(tmp_dir)
 
-    output = execute_shell_command('fakeroot {} -x -vv -m {}'.format(shell_escape_string(script_path), shell_escape_string(file_path))) + "\n"
+    output = execute_shell_command('fakeroot {} -x -vv -m {}'.format(shell_escape_string(str(script_path)), shell_escape_string(str(file_path)))) + "\n"
 
     _rename_files(file_path)
     _remove_ini_files()

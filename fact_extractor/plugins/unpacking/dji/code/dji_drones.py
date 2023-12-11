@@ -18,7 +18,7 @@ def unpack_function(file_path, tmp_dir):
     if not path.exists(TOOL_PATH):
         return {'output': 'Error: phantom_firmware_tools not installed! Re-Run the installation script!'}
 
-    output = execute_shell_command(f'(cd {shell_escape_string(tmp_dir)} && fakeroot python3 {TOOL_PATH} -x -vv -p {shell_escape_string(file_path)})') + '\n'
+    output = execute_shell_command(f'(cd {shell_escape_string(str(tmp_dir))} && fakeroot python3 {TOOL_PATH} -x -vv -p {shell_escape_string(str(file_path))})') + '\n'
 
     _rename_files(tmp_dir)
     _remove_ini_files(tmp_dir)

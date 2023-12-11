@@ -45,7 +45,7 @@ def unpack_function(file_path, tmp_dir):
 
     # scan for device tree blobs
     if DTB_MAGIC in Path(file_path).read_bytes():
-        cmd = f'''extract-dtb {shell_escape_string(file_path)} -o {Path(tmp_dir) / 'dtb'}'''
+        cmd = f'''extract-dtb {shell_escape_string(str(file_path))} -o {Path(tmp_dir) / 'dtb'}'''
         output = cmd + '\n'
         output += execute_shell_command(cmd, timeout=10)
         meta['extract-dtb'] = output

@@ -19,7 +19,7 @@ def unpack_function(file_path, tmp_dir):
         staged_path = str(Path(staging_dir) / '{}.arj'.format(Path(file_path).name))
         symlink(file_path, staged_path)
         output = execute_shell_command(
-            'arj x -r -y {} {}'.format(shell_escape_string(staged_path), shell_escape_string(tmp_dir)), timeout=600
+            'arj x -r -y {} {}'.format(shell_escape_string(str(staged_path)), shell_escape_string(str(tmp_dir))), timeout=600
         )
 
     return {'output': output}

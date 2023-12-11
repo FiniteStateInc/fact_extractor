@@ -16,7 +16,7 @@ def unpack_function(file_path, tmp_dir):
     file_path specifies the input file.
     tmp_dir should be used to store the extracted files.
     '''
-    output = execute_shell_command('fakeroot {} -o {} {}'.format(STUFFIT_UNPACKER, shell_escape_string(tmp_dir), shell_escape_string(file_path)))
+    output = execute_shell_command('fakeroot {} -o {} {}'.format(STUFFIT_UNPACKER, shell_escape_string(str(tmp_dir)), shell_escape_string(str(file_path))))
     return {'output': output}
 
 

@@ -51,7 +51,7 @@ def unpack_function(file_path, tmp_dir):
     """
     return {
         'output': execute_shell_command(
-            f'fakeroot python3 {TOOL_PATH} extract --outdir {shell_escape_string(tmp_dir)} {shell_escape_string(file_path)}', timeout=600
+            f'fakeroot python3 {TOOL_PATH} extract --outdir {shell_escape_string(str(tmp_dir))} {shell_escape_string(str(file_path))}', timeout=600
         )
     }
 

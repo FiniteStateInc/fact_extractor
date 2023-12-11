@@ -22,8 +22,8 @@ def unpack_function(file_path, tmp_dir):
 
     result = {}
 
-    result['output'] = execute_shell_command('fakeroot {} -x {}'.format(UNPACKER_EXECUTEABLE, shell_escape_string(tmp_file_path)))
-    result['header-info'] = execute_shell_command('{} -s {}'.format(UNPACKER_EXECUTEABLE, shell_escape_string(tmp_file_path)))
+    result['output'] = execute_shell_command('fakeroot {} -x {}'.format(UNPACKER_EXECUTEABLE, shell_escape_string(str(tmp_file_path))))
+    result['header-info'] = execute_shell_command('{} -s {}'.format(UNPACKER_EXECUTEABLE, shell_escape_string(str(tmp_file_path))))
 
     os.remove(tmp_file_path)
 

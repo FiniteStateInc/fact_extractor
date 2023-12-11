@@ -44,7 +44,7 @@ def _remove_non_trx_header(source_path, target_fp, offset):
 
 
 def _unpack_trx(file_path, target_dir):
-    return execute_shell_command('fakeroot {} {} {}'.format(UNPACKER_EXECUTEABLE, shell_escape_string(file_path), shell_escape_string(target_dir)))
+    return execute_shell_command('fakeroot {} {} {}'.format(UNPACKER_EXECUTEABLE, shell_escape_string(str(file_path)), shell_escape_string(str(target_dir))))
 
 
 # ----> Do not edit below this line <----

@@ -31,7 +31,7 @@ def unpack_function(file_path, tmp_dir):
     '''
     unpack_result = {}
     for unpacker, parameter in SQUASH_UNPACKER:
-        output = execute_shell_command(f'fakeroot {unpacker} {parameter} -d {shell_escape_string(tmp_dir)}/fact_extracted {shell_escape_string(file_path)}')
+        output = execute_shell_command(f'fakeroot {unpacker} {parameter} -d {shell_escape_string(str(tmp_dir))}/fact_extracted {shell_escape_string(str(file_path))}')
         if _unpack_success(tmp_dir):
             unpack_result['unpacking_tool'] = unpacker.name
             unpack_result['output'] = output

@@ -18,7 +18,7 @@ def unpack_function(file_path, tmp_dir):
     tmp_dir should be used to store the extracted files.
     '''
     unpacker = '{} -e'.format(UNYAFFS2_EXECUTEABLE) if _is_big_endian(file_path) else '{} -v'.format(UNYAFFS_EXECUTEABLE)
-    output = execute_shell_command('fakeroot {} {} {}'.format(unpacker, shell_escape_string(file_path), shell_escape_string(tmp_dir)))
+    output = execute_shell_command('fakeroot {} {} {}'.format(unpacker, shell_escape_string(str(file_path)), shell_escape_string(str(tmp_dir))))
     return {'output': output}
 
 

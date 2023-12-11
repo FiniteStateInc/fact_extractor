@@ -24,11 +24,11 @@ def unpack_function(file_path, tmp_dir):
 
 
 def _extract_squashfs(file_path, tmp_dir):
-    return execute_shell_command('cd {} && {} {}'.format(shell_escape_string(tmp_dir), FIND_SQUASHFS_TOOL_PATH, shell_escape_string(file_path)))
+    return execute_shell_command('cd {} && {} {}'.format(shell_escape_string(str(tmp_dir)), FIND_SQUASHFS_TOOL_PATH, shell_escape_string(str(file_path))))
 
 
 def _extract_kernel_image(file_path, tmp_dir):
-    return execute_shell_command('{} {} {}/kernel_decompressed.img'.format(UNPACK_KERNEL_TOOL_PATH, shell_escape_string(file_path), shell_escape_string(tmp_dir)))
+    return execute_shell_command('{} {} {}/kernel_decompressed.img'.format(UNPACK_KERNEL_TOOL_PATH, shell_escape_string(str(file_path)), shell_escape_string(str(tmp_dir))))
 
 
 # ----> Do not edit below this line <----
